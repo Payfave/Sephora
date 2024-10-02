@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wink Login</title>
+    <script type="text/javascript" src="winklogin.module.js"></script>
+</head>
+<body>
+    <div id="wink-user-data"></div>
+
+    <script>
+        const clientId = 'sephora';
+        var config = {
+            url: 'https://stageauth.winkapis.com',
+            realm: 'wink',
+            clientId,
+            onAuthErrorFailure: (error) => console.error(error),
+            loggingEnabled: true,
+            redirectUri: 'myapp://auth',
+        };
+
+        const winkLoginClient = getWinkLoginClient(config);
+
+        window.addEventListener('load', function() {
+            winkLoginClient.winkInit({
+                onSuccess: () => {
+                    if (winkLoginClient.authenticated) {
+                        window.location.href = "net.openid.appauthdemo";
+                    }
+                },
+                onFailure: (error) => {
+                    console.error("Init failure: ", error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
