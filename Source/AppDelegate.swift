@@ -6,6 +6,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var viewController: ViewController?
+    var userInfoViewController: UserInfoViewController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -21,11 +22,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         guard url.scheme == "myapp" else {
-            print("URL scheme no reconocido")
+            print("URL scheme no reconocido: \(url.scheme ?? "nil")")
             return false
         }
-        
-        viewController?.handleCallbackURL(url)
+                
+        if url.absoluteString.contains("callback/logout") {
+            if let navController = window?.rootViewController as? UINavigationController,
+               let userInfoVC = navController.viewControllers.compactMap({ $0 as? UserInfoViewController }).last {
+                userInfoVC.handleLogout()
+                return true
+            } else {
+                return false
+            }
+           
+        } else {
+            viewController?.handleCallbackURL(url)
+        }
+    
         return true
     }
 }

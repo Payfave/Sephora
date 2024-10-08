@@ -1,9 +1,13 @@
 import UIKit
+import SafariServices
 
-class UserInfoViewController: UIViewController {
+class UserInfoViewController: UIViewController, SFSafariViewControllerDelegate {
     var toHomeButton: UIButton!
+    var logoutButton: UIButton!
     var verifyButton: UIButton!
     var accessToken: String?
+    var safariViewController: SFSafariViewController?
+
     private var responseLabel = UILabel()
     private let spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     
@@ -25,6 +29,18 @@ class UserInfoViewController: UIViewController {
             tokenLabel.text = "Access Token: \(shortToken)"
         }
         view.addSubview(tokenLabel)
+        
+        logoutButton = UIButton(type: .custom)
+        logoutButton.setTitle("Log-out", for: .normal)
+        logoutButton.setTitleColor(.white, for: .normal)
+        logoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        logoutButton.backgroundColor = UIColor.red
+        logoutButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        logoutButton.layer.cornerRadius = 5
+        logoutButton.clipsToBounds = true
+        logoutButton.translatesAutoresizingMaskIntoConstraints = false
+        logoutButton.addTarget(self, action: #selector(logoutAction), for: .touchUpInside)
+        view.addSubview(logoutButton)
 
         toHomeButton = UIButton(type: .custom)
         toHomeButton.setTitle("Home", for: .normal)
@@ -74,6 +90,9 @@ class UserInfoViewController: UIViewController {
 
             spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             spinner.topAnchor.constraint(equalTo: responseLabel.bottomAnchor, constant: 20),
+            
+            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoutButton.bottomAnchor.constraint(equalTo: toHomeButton.topAnchor, constant: -20),
 
             toHomeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             toHomeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
@@ -83,7 +102,83 @@ class UserInfoViewController: UIViewController {
     @objc private func toHomeAction() {
         navigationController?.popViewController(animated: true)
     }
+    
+    @objc private func logoutAction() {
+        guard let idToken = UserDefaults.standard.string(forKey: "idToken") else {
+            print("ID Token not available")
+            return
+        }
+        
+        let urlString = Constants.logoutEndpoint
+        var components = URLComponents(string: urlString)!
+        
+        components.queryItems = [
+            URLQueryItem(name: "post_logout_redirect_uri", value: "myapp://callback/logout"),
+            URLQueryItem(name: "id_token_hint", value: idToken),
+            URLQueryItem(name: "client_id", value: "sephora")
+        ]
+        
+        guard let url = components.url else {
+            print("Failed to create URL from components")
+            return
+        }
+        
+        openLogoutURL(url)
+    }
 
+    
+    func openLogoutURL(_ url: URL) {
+        print("openLogoutURL: \(url)")
+        let safariViewController = SFSafariViewController(url: url)
+        safariViewController.delegate = self
+        self.safariViewController = safariViewController
+        present(safariViewController, animated: true, completion: nil)
+    }
+
+    
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        controller.dismiss(animated: true) {
+            self.safariViewController = nil
+            self.navigateToLogin()
+        }
+    }
+
+   
+    @objc func handleLogout() {
+        UserDefaults.standard.removeObject(forKey: "accessToken")
+        UserDefaults.standard.removeObject(forKey: "refreshToken")
+        UserDefaults.standard.removeObject(forKey: "idToken")
+        UserDefaults.standard.synchronize()
+    
+        safariViewController?.dismiss(animated: true, completion: nil)
+        
+        dismiss(animated: true) {
+            if let navigationController = self.navigationController {
+                navigationController.popToRootViewController(animated: true)
+            } else {
+                let loginVC = ViewController()
+                let navController = UINavigationController(rootViewController: loginVC)
+                if let window = UIApplication.shared.windows.first {
+                    window.rootViewController = navController
+                    window.makeKeyAndVisible()
+                }
+            }
+        }
+    }
+    
+    private func navigateToLogin() {
+        UserDefaults.standard.removeObject(forKey: "accessToken")
+        UserDefaults.standard.removeObject(forKey: "refreshToken")
+        UserDefaults.standard.synchronize()
+
+        if let window = UIApplication.shared.windows.first {
+            let loginVC = ViewController()
+            let navController = UINavigationController(rootViewController: loginVC)
+            window.rootViewController = navController
+            window.makeKeyAndVisible()
+        }
+    }
+    
     @objc private func verifyClientAction() {
         guard let token = accessToken else { return }
         spinner.startAnimating()

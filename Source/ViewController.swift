@@ -2,22 +2,13 @@ import UIKit
 import AuthenticationServices
 import SafariServices
 
-protocol AuthenticationDelegate: AnyObject {
-    func didReceiveAuthCode(_ code: String)
-    func didFailAuthentication(with error: Error)
-}
 
 class ViewController: UIViewController, SFSafariViewControllerDelegate {
 
     var loginButton: UIButton!
     private var authCode: String = ""
-    weak var authDelegate: AuthenticationDelegate?
     private var safariViewController: SFSafariViewController?
     private var isSafariViewControllerPresented = false
-    
-    private var appDelegate: AppDelegate? {
-        return UIApplication.shared.delegate as? AppDelegate
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,11 +60,11 @@ class ViewController: UIViewController, SFSafariViewControllerDelegate {
     func startAuthFlow() {
         let redirectUri = "myapp://callback/"
         let state = UUID().uuidString
-        
+                
         guard let authURL = Constants.getAuthURL(redirectUri: redirectUri, state: state) else {
             return
         }
-        
+                
         if isSafariViewControllerPresented {
             safariViewController?.dismiss(animated: false) {
                 self.openSafariViewController(with: authURL)
@@ -161,11 +152,22 @@ class ViewController: UIViewController, SFSafariViewControllerDelegate {
             }
 
             do {
-                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let accessToken = json["access_token"] as? String {
-                    DispatchQueue.main.async {
-                        let userInfoVC = UserInfoViewController()
-                         userInfoVC.accessToken = accessToken
-                         self.navigationController?.pushViewController(userInfoVC, animated: true)
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    print("Full token response: \(json)")
+
+                    if let accessToken = json["access_token"] as? String,
+                       let refreshToken = json["refresh_token"] as? String,
+                       let idToken = json["id_token"] as? String {
+                        DispatchQueue.main.async {
+                            
+                            UserDefaults.standard.set(accessToken, forKey: "accessToken")
+                            UserDefaults.standard.set(refreshToken, forKey: "refreshToken")
+                            UserDefaults.standard.set(idToken, forKey: "idToken")
+                            
+                            let userInfoVC = UserInfoViewController()
+                            userInfoVC.accessToken = accessToken
+                            self.navigationController?.pushViewController(userInfoVC, animated: true)
+                        }
                     }
                 }
             } catch {
@@ -174,6 +176,7 @@ class ViewController: UIViewController, SFSafariViewControllerDelegate {
         }
         task.resume()
     }
+    
 
     private func dismissSafariViewController() {
         safariViewController?.dismiss(animated: true) {
@@ -190,6 +193,8 @@ class ViewController: UIViewController, SFSafariViewControllerDelegate {
         safariViewController = nil
     }
 }
+
+
 
 extension URL {
     var queryParameters: [String: String]? {

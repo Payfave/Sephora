@@ -13,10 +13,8 @@
 		9F265BD31F9AC69300DC14BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F265BCB1F9AC69300DC14BF /* LaunchScreen.storyboard */; };
 		9F265BD51F9AC69300DC14BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F265BCF1F9AC69300DC14BF /* AppDelegate.swift */; };
 		D01FF77C2CA8BE5B004CA524 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01FF77B2CA8BE5B004CA524 /* UserInfoViewController.swift */; };
-		D04072462CAA319700F919DE /* winklogin.module.js in Resources */ = {isa = PBXBuildFile; fileRef = D04072452CAA319700F919DE /* winklogin.module.js */; };
 		D040724A2CAA5D0700F919DE /* kConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04072492CAA5D0700F919DE /* kConstants.swift */; };
 		D097A9542CA8B18600AD56C9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D097A9532CA8B18600AD56C9 /* ViewController.swift */; };
-		D097A9562CA8B1B700AD56C9 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = D097A9552CA8B1B700AD56C9 /* index.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,10 +52,8 @@
 		9F265BCF1F9AC69300DC14BF /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9F265BD01F9AC69300DC14BF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D01FF77B2CA8BE5B004CA524 /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
-		D04072452CAA319700F919DE /* winklogin.module.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = winklogin.module.js; sourceTree = "<group>"; };
 		D04072492CAA5D0700F919DE /* kConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kConstants.swift; sourceTree = "<group>"; };
 		D097A9532CA8B18600AD56C9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		D097A9552CA8B1B700AD56C9 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,9 +100,7 @@
 				9F265BCF1F9AC69300DC14BF /* AppDelegate.swift */,
 				D01FF77B2CA8BE5B004CA524 /* UserInfoViewController.swift */,
 				D04072492CAA5D0700F919DE /* kConstants.swift */,
-				D04072452CAA319700F919DE /* winklogin.module.js */,
 				D097A9532CA8B18600AD56C9 /* ViewController.swift */,
-				D097A9552CA8B1B700AD56C9 /* index.html */,
 				9F265BCB1F9AC69300DC14BF /* LaunchScreen.storyboard */,
 				9F265BC91F9AC69300DC14BF /* Assets.xcassets */,
 				9F265BD01F9AC69300DC14BF /* Info.plist */,
@@ -228,9 +222,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D097A9562CA8B1B700AD56C9 /* index.html in Resources */,
 				9F265BD11F9AC69300DC14BF /* Assets.xcassets in Resources */,
-				D04072462CAA319700F919DE /* winklogin.module.js in Resources */,
 				9F265BD31F9AC69300DC14BF /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

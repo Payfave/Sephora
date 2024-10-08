@@ -15,7 +15,7 @@ To run this project, you need to complete the following steps:
 ### Key Features
 
 - OAuth 2.0 authentication flow
-- WebView/SFSafariViewController integration for login
+- SFSafariViewController integration for login and logout
 - Secure token handling
 - SSL certificate validation
 - User profile fetch and display
@@ -37,22 +37,25 @@ These values are essential for the OAuth 2.0 authentication process.
 This file contains the main logic of the application:
 
 1. **Initial User Interface:**
+
    - Creates a login button with the text "Login with WINK".
    - The button has a custom style with a red semicolon icon.
 
 2. **Login Process:**
-   - When the login button is tapped, it loads a local HTML file named "index.html" that likely contains the WINK login SDK and Keycloak initialization.
+
+   - When the login button is tapped, a request is made to the auth endpoint of keycloak for the configured client.
 
 3. **Authentication Handling:**
    - Intercept navigations.
-   - Looks for a specific URL (stagelogin.winkapis.com) indicating successful authentication.
+   - Looks for a specific URL indicating successful authentication.
    - Extracts the authorization token and redirect URI from the URL parameters.
-
 
 ### 3. UserInfoViewController.swift
 
-This file handles the screen displayed after successful authentication:
+This file handles the screen displayed after successful authentication and the logout feature.
 
 **User Interface:**
+
 - Displays a user dashboard with labels for the token and profile details.
 - Includes a button to validate the token and get user profile, and another to go back to home.
+- Button to perform the logout.
